@@ -1,25 +1,19 @@
 package project.banking_app.mapper;
 
-import project.banking_app.dto.AccountDto;
-import project.banking_app.entity.Account;
+import project.banking_app.dto.BankAccountDTO;
+import project.banking_app.entity.BankAccount;
 
 public class AccountMapper {
 
-    public  static  Account mapToAccount(AccountDto accountDto){
-        Account account = new Account(
-                accountDto.getId(),
-                accountDto.getAccountHolderName(),
-                accountDto.getBalance()
-        );
-        return account;
+    public  static BankAccount mapToAccount(BankAccountDTO bankAccountDTO){
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setAccountId(bankAccountDTO.getAccountId());
+        bankAccount.setBalance(bankAccountDTO.getBalance());
+        bankAccount.setAccountType(bankAccountDTO.getAccountType());
+        return bankAccount;
     }
 
-    public static AccountDto mapToAccountDto(Account account){
-        AccountDto accountDto = new AccountDto(
-                account.getId(),
-                account.getAccountHolderName(),
-                account.getBalance()
-        );
-        return accountDto;
+    public static BankAccountDTO mapToAccountDto(BankAccount bankAccount){
+        return new BankAccountDTO(bankAccount.getAccountId(), bankAccount.getAccountType(), bankAccount.getBalance());
     }
 }
