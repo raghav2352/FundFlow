@@ -2,12 +2,15 @@ package project.banking_app.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,6 +29,9 @@ public class User {
 
     @Column(nullable = false)
     private  String name;
+
+    @Column
+    private String role;
 
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BankAccount> bankAccounts;

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.banking_app.dto.BankAccountDTO;
 import project.banking_app.dto.UserDTO;
+import project.banking_app.entity.User;
 import project.banking_app.service.UserService;
 
 import java.util.List;
@@ -27,11 +28,15 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
         UserDTO user = userService.getUserById(userId);
+
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Password: " + user.getPassword());
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+
         UserDTO createdUser = userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }

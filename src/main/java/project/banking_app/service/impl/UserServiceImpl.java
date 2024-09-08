@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(Long userId) {
         return  userRepository.findById(userId)
                 .map(user -> UserMapper.mapToUserDto(user))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found wiht id " + userId));
     }
 
     @Override
