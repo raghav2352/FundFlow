@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.banking_app.dto.BankAccountDTO;
 import project.banking_app.dto.UserDTO;
-import project.banking_app.entity.User;
 import project.banking_app.service.UserService;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
-        UserDTO createdUser = userService.createUser(userDTO);
+        UserDTO createdUser = userService.registerUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -52,9 +51,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Successfully deleted user with id " +userId);
     }
 
 
