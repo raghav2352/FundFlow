@@ -9,6 +9,8 @@ import project.banking_app.entity.User;
 import project.banking_app.repository.UserRepository;
 import project.banking_app.security.myUserDetails;
 
+import java.util.Optional;
+
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
@@ -18,11 +20,8 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
-        if(user == null) {
-            System.out.println("User not found");
-            throw new UsernameNotFoundException("User not found");
-        }
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found with email " + username));
         return new myUserDetails(user);
     }
 }

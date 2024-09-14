@@ -2,6 +2,7 @@ package project.banking_app.service;
 
 import project.banking_app.dto.BankAccountDTO;
 import project.banking_app.dto.UserDTO;
+import project.banking_app.entity.User;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface UserService {
     void deleteUser(Long userId);
     void addBankAccountToUser(Long userId , BankAccountDTO bankAccountDTO);
     List<BankAccountDTO> getBankAccountsForUser(Long userId );
+    User findByEmail(String email);
 }

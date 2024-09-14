@@ -4,9 +4,12 @@ package project.banking_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import project.banking_app.dto.BankAccountDTO;
 import project.banking_app.dto.UserDTO;
+import project.banking_app.entity.User;
+import project.banking_app.mapper.UserMapper;
 import project.banking_app.service.UserService;
 
 import java.util.List;
@@ -40,7 +43,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @PutMapping("/{userId}")
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getCurrentUser(){
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+
+        User user = userService.findByEmail(currentUserEmail);
+
+        UserDTO userDTO = UserMapper.mapToUserDto(user);
+
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @PatchMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
         try {
             UserDTO updatedUser = userService.updateUser(userId, userDTO);

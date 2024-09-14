@@ -29,6 +29,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private  BankAccountRepository bankAccountRepository;
 
     @Autowired
@@ -54,8 +57,9 @@ public class UserServiceImpl implements UserService {
     public UserDTO registerUser(UserDTO userDTO) {
         User user = UserMapper.mapToUser(userDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role defaultRole = roleRepository.findByName("user");
-        if(defaultRole != null) user.setRoles(Set.of(defaultRole));
+        Role defaultRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(()-> new RuntimeException("Default role not found"));
+        user.setRoles(Set.of(defaultRole));
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);
     }
@@ -71,13 +75,14 @@ public class UserServiceImpl implements UserService {
                         existingUser.setEmail(userDTO.getEmail());
                     }
                     if (userDTO.getPassword() != null) {
-                        existingUser.setPassword(userDTO.getPassword());
+                        existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
                     }
                     if (userDTO.getRoles() != null) {
                         Set<Role> roles = userDTO.getRoles().stream()
-                                .map(roleDTO -> roleRepository.findByName(roleDTO.getName()))
-                                .filter(Objects::nonNull)
-                                .collect(Collectors.toSet());
+                                        .map(roleDTO -> roleRepository.findByName(roleDTO.getName())
+                                                .orElseThrow(()-> new RuntimeException("Role not found " + roleDTO.getName()))
+                                        )
+                                        .collect(Collectors.toSet());
                         existingUser.setRoles(roles);
                     }
                     return userRepository.save(existingUser);
@@ -113,5 +118,11 @@ public class UserServiceImpl implements UserService {
         return user.getBankAccounts().stream()
                 .map(BankAccount -> AccountMapper.mapToAccountDto(BankAccount))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email " + email));
     }
 }
