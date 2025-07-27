@@ -45,7 +45,7 @@ public class Transaction {
     private TransactionType transactionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bank_account_id")
+    @JoinColumn(name = "account_id" , nullable = false)
     private BankAccount bankAccount;
 
 }

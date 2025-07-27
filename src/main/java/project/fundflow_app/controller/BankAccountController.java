@@ -6,10 +6,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import project.fundflow_app.dto.bank.BalanceResponse;
 import project.fundflow_app.dto.bank.BankAccountRequest;
 import project.fundflow_app.dto.bank.BankAccountResponse;
 import project.fundflow_app.service.BankAccountService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -59,6 +61,13 @@ public class BankAccountController {
     public ResponseEntity<String> deleteAccount(@PathVariable Long accountId){
         bankAccountService.deleteAccount(accountId);
         return ResponseEntity.ok("Bank account deleted successfully.");
+    }
+
+    @PreAuthorize("@authUtil.isAccountOwner(#accountId) or hasRole('ADMIN')")
+    @GetMapping("/{accountId}/balance")
+    public  ResponseEntity<BalanceResponse> getAccountBalance(@PathVariable Long accountId){
+        BalanceResponse balance = bankAccountService.getAccountBalance(accountId);
+        return ResponseEntity.ok(balance);
     }
 
    

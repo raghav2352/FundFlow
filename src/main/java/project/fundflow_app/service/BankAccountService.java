@@ -1,6 +1,9 @@
 package project.fundflow_app.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import project.fundflow_app.dto.bank.BalanceResponse;
 import project.fundflow_app.dto.bank.BankAccountRequest;
 import project.fundflow_app.dto.bank.BankAccountResponse;
 
@@ -19,6 +22,8 @@ public interface BankAccountService {
      BankAccountResponse updateAccount(Long id , BankAccountRequest request);
 
      void deleteAccount(Long userId);
+
+     BalanceResponse getAccountBalance(Long accountId);
 
      
      

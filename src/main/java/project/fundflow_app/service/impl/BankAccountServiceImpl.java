@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import project.fundflow_app.dto.bank.BalanceResponse;
 import project.fundflow_app.dto.bank.BankAccountRequest;
 import project.fundflow_app.dto.bank.BankAccountResponse;
 import project.fundflow_app.entity.BankAccount;
@@ -14,6 +15,7 @@ import project.fundflow_app.repository.TransactionRepository;
 import project.fundflow_app.repository.UserRepository;
 import project.fundflow_app.service.BankAccountService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,10 +102,18 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Transactional
     public void deleteAccount(Long accountId) {
-        transactionRepository.deleteByBankAccount_AccountId(accountId);
         bankAccountRepository.deleteById(accountId);
     }
-    
+
+    @Override
+    public BalanceResponse getAccountBalance(Long accountId) {
+        BankAccount account = bankAccountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Bank account not found"));
+        String userName = account.getUser().getName();
+
+        return new BalanceResponse(accountId , userName , account.getBalance());
+    }
+
 }
 
 
